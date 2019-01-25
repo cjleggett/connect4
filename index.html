@@ -104,13 +104,13 @@
                 let colNum = event.target.dataset.index;
                 let blocks = document.querySelectorAll((".column" + String(colNum)));
                 blocks.forEach( function(block) {
-                    block.style.backgroundColor = "#e1e3e8";
+                    block.style.backgroundColor = "#bcc0c4";
                 });
                 for (let c = 0; c < 7; c++) {
                     if (c != colNum) {
                         let others = document.querySelectorAll((".column" + String(c)));
                         others.forEach(function(other) {
-                            other.style.backgroundColor = "white";
+                            other.style.backgroundColor = "#e7e7e1";
                         });
                     }
                 }
@@ -118,7 +118,7 @@
                 for (let c = 0; c < 7; c++) {
                     let others = document.querySelectorAll((".column" + String(c)));
                     others.forEach(function(other) {
-                        other.style.backgroundColor = "white";
+                        other.style.backgroundColor = "#e7e7e1";
                     });
                 }
             }
