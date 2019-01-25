@@ -1,0 +1,33 @@
+table {
+    border-collapse: collapse;
+}
+td {
+    border: 1px solid black;
+    width: 150px;
+    height: 70px;
+    font-size: 10px;
+    text-align: center;
+}
+
+body {
+    margin: auto;
+    max-width: 500px;
+    text-align: center;
+}
+
+
+.Blue {
+    color: blue;
+    font-size: 22px;
+}
+
+.done {
+    background-color: #e8a833;
+    color: #e8a833;
+    border: #e8a833;
+}
+
+.Red {
+    color: red;
+    font-size: 22px;
+}
