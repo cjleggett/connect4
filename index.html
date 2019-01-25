@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Connect 4</title>
+  </head>
+  <body>
+    <div id="app" />
+    <script type="text/babel">
+
+      class App extends React.Component {
+
+        constructor(props) {
+            super(props);
+            
+            // Creating a gameboard:
+            let board = [["top", "top", "top", "top", "top", "top", "top"]];
+            for (let i = 0; i < 6; i ++) {
+                let row = []
+                for (let j = 0; j < 7; j ++) {
+                    row.push(null);
+                }
+                board.push(row);
+            }
+            this.state = {
+                blueTurn: true,
+                winner: null,
+                board: board
+            }
+        }
+
+        render() {
+
+            const rows = this.state.board.map((row, i) => {
+                return (
+                    <tr key={i}>
+                        {this.rowInfo(i)}
+                    </tr>
+                );
+            })
+
+            return (
+                <div>
+                    <h1>Welcome to Connect 4!</h1>
+                    <h1 class = {this.state.winner == null ? (this.state.blueTurn ? "Blue" : "Red") : this.state.winner }>{this.state.winner == null ? (this.state.blueTurn ? "Blue's turn!" : "Red's turn!") : this.state.winner+ " wins!"}</h1>
+                    <br/>
+                    <table class="table table-bordered">
+                        <tbody>
+                            {rows}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        }
+
+
+
+        rowInfo = (i) => {
+            if (i != 0) {
+                const cols = this.state.board[i].map((col, j) => {
+                    return (
+                        <td class={this.state.board[i][j]} bgcolor={j%2 == 0 ? "#ffffff" : "#f4f4f7"} key={j}>{this.state.board[i][j] == null ? "" : this.state.board[i][j]}</td>
+                    );
+                })
+                return cols;
+            } else {
+                const cols = this.state.board[i].map((col, j) => {
+                    return (
+                        <td bgcolor="#e8a833" key={j} >
+                            <button  class={this.state.winner == null ? "click" : "done click"} data-index={j} onClick={this.playCol} >Play!</button>
+                        </td>
+                    );
+                })
+                return cols;
+            }
+        }
+
+
+        playCol = (event) => {
+            let colNum = event.target.dataset.index;
+            let newBoard = this.state.board
+            let turnName = this.state.blueTurn ? "Blue" : "Red"
+            for (let i = 6; i > 0; i --) {
+                if (!(newBoard[i][colNum])) {
+                    newBoard[i][colNum] = turnName;
+                    this.setState(state => ({
+                        board: newBoard,
+                        blueTurn: !state.blueTurn
+                    }), this.checkWin);
+                    return;
+                }
+            }
+        }
+
+        disable = () => {
+            document.querySelectorAll(".click").forEach(function(button) {
+                button.disabled = true;
+            })
+            
+        }
+
+
+        checkWin = () => {
+            let board = this.state.board;
+
+            // Checking for a horizontal win:
+            for (let rowNum = 1; rowNum < 7; rowNum ++) {
+                for (let colNum = 0; colNum < 4; colNum ++) {
+                    let compVal = board[rowNum][colNum];
+                    if (board[rowNum][colNum+1] == compVal && board[rowNum][colNum + 2] == compVal && board[rowNum][colNum+3] == compVal && compVal != null) {
+                        this.setState(state => ({
+                            winner: compVal
+                        }));
+                        this.disable();
+                    }
+                }
+            }
+
+            // Checking for a vertical win:
+            for (let colNum = 0; colNum < 7; colNum ++) {
+                for (let rowNum = 1; rowNum < 4; rowNum ++) {
+                    let compVal = board[rowNum][colNum];
+                    if (board[rowNum+1][colNum] == compVal && board[rowNum+2][colNum] == compVal && board[rowNum+3][colNum] == compVal && compVal != null) {
+                        this.setState(state => ({
+                            winner: compVal
+                        }));
+                        this.disable();
+                    }
+                }
+            }
+
+            // Checking for a backward slash win:
+            for (let colNum = 0; colNum < 4; colNum ++){
+                for (let rowNum = 1; rowNum < 4; rowNum ++) {
+                    let compVal = board[rowNum][colNum];
+                    if (board[rowNum+1][colNum+1] == compVal && board[rowNum+2][colNum+2] == compVal && board[rowNum+3][colNum+3] == compVal && compVal != null) {
+                        this.setState(state => ({
+                            winner: compVal
+                        }));
+                        this.disable();
+                    }
+                }
+            }
+
+            // Checking for a forward slash win:
+            for (let colNum = 0; colNum < 4; colNum ++){
+                for (let rowNum = 6; rowNum > 3; rowNum --) {
+                    let compVal = board[rowNum][colNum];
+                    if (board[rowNum-1][colNum+1] == compVal && board[rowNum-2][colNum+2] == compVal && board[rowNum-3][colNum+3] == compVal && compVal != null) {
+                        this.setState(state => ({
+                            winner: compVal
+                        }));
+                        this.disable();
+                    }
+                }
+            }
+        }
+
+        
+      }
+
+      ReactDOM.render(<App />, document.querySelector("#app"));
+
+    </script>
+  </body>
+</html>
